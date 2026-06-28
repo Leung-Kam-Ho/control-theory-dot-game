@@ -320,11 +320,11 @@ class Game:
                         t = max(0.0, min(1.0, (mx - tx) / tw))
                         # Map to parameter range
                         if self._slider_active == 0:  # Kp
-                            self.chaser.pid.kp = 0.01 + t * (5.0 - 0.01)
+                            self.chaser.pid.kp = 0.01 + t * (10.0 - 0.01)
                         elif self._slider_active == 1:  # Ki
-                            self.chaser.pid.ki = t * 2.0
+                            self.chaser.pid.ki = t * 10.0
                         elif self._slider_active == 2:  # Kd
-                            self.chaser.pid.kd = t * 2.0
+                            self.chaser.pid.kd = t * 10.0
                         self.chaser.pid.reset()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left click
@@ -452,9 +452,9 @@ class Game:
         track_h = 8
         knob_r = 12
         params = [
-            ("Kp", self.chaser.pid.kp, 0.01, 5.0, P_COLOR, "kp"),
-            ("Ki", self.chaser.pid.ki, 0.0, 2.0, I_COLOR, "ki"),
-            ("Kd", self.chaser.pid.kd, 0.0, 2.0, D_COLOR, "kd"),
+            ("Kp", self.chaser.pid.kp, 0.01, 10.0, P_COLOR, "kp"),
+            ("Ki", self.chaser.pid.ki, 0.0, 10.0, I_COLOR, "ki"),
+            ("Kd", self.chaser.pid.kd, 0.0, 10.0, D_COLOR, "kd"),
         ]
         self._slider_track_rects = []
 
