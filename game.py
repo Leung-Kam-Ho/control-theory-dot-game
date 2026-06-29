@@ -259,7 +259,7 @@ class Game:
         self.error_panel_h = 480
 
         # Instructions panel
-        self.instruction_panel_x = SCREEN_WIDTH // 2 - 300
+        self.instruction_panel_x = SCREEN_WIDTH - 620
         self.instruction_panel_y = SCREEN_HEIGHT - 180
         self.instruction_panel_w = 600
         self.instruction_panel_h = 150
@@ -300,8 +300,7 @@ class Game:
                     self.paused = not self.paused
                 elif event.key == pygame.K_r:
                     self.reset()
-                elif event.key == pygame.K_t:
-                    self.target.set_auto(not self.target.manual_mode)
+
                 elif event.key == pygame.K_TAB:
                     docked = self.target.toggle_dock()
                     # Steal focus so the target doesn't jump to cursor on toggle
@@ -374,7 +373,7 @@ class Game:
         self.draw_error_panel()
         self.draw_graph()
         self.draw_instructions()
-        self.draw_capture_indicator()
+
         pygame.display.flip()
 
     def draw_grid(self):
@@ -489,9 +488,7 @@ class Game:
 
         # Legend
         y += 10
-        auto_label = self.small_font.render("T — Toggle auto target", True, ACCENT_COLOR)
-        self.screen.blit(auto_label, (self.pid_panel_x + 15, y))
-        y += 25
+
         reset_label = self.small_font.render("R — Reset chaser", True, ACCENT_COLOR)
         self.screen.blit(reset_label, (self.pid_panel_x + 15, y))
         y += 25
@@ -572,7 +569,7 @@ class Game:
 
         # Axis labels
         max_label = self.small_font.render(f"max: {max_error:.0f}", True, (150, 150, 170))
-        self.screen.blit(max_label, (self.graph_x + 15, self.graph_y + 15))
+        self.screen.blit(max_label, (self.graph_x + self.graph_w - 80, self.graph_y + 10))
 
     def draw_instructions(self):
         panel_surf = pygame.Surface((self.instruction_panel_w, self.instruction_panel_h), pygame.SRCALPHA)
@@ -586,8 +583,7 @@ class Game:
             "      Kp (Proportional) — reacts to current error",
             "      Ki (Integral)      — accumulates past error",
             "      Kd (Derivative)    — predicts future error",
-            "",
-            "  💡 Try: high Kp = oscillation  |  add Ki = eliminate gap  |  add Kd = smooth it out",
+
         ]
 
         y = self.instruction_panel_y + 10
@@ -600,15 +596,7 @@ class Game:
             self.screen.blit(txt, (self.instruction_panel_x + 15, y))
             y += 22
 
-    def draw_capture_indicator(self):
-        if self.captured:
-            elapsed = (pygame.time.get_ticks() - self.capture_timer) / 1000.0
-            if elapsed < 2.0:
-                # Flashing capture text
-                alpha = int(128 + 127 * math.sin(elapsed * 6))
-                text = self.big_font.render("✦ CAPTURED! ✦", True, (255, 255, 100))
-                rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
-                self.screen.blit(text, rect)
+
 
 
 if __name__ == "__main__":
