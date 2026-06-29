@@ -40,7 +40,7 @@ D_COLOR = (100, 255, 100)
 # Chaser physics
 CHASER_RADIUS = 25
 TARGET_RADIUS = 18
-CHASE_SPEED_MAX = 500  # pixels per second
+CHASE_SPEED_MAX = 800  # pixels per second (max velocity)
 TRAIL_LENGTH = 120
 ERROR_LINE_ALPHA = 180
 
@@ -71,7 +71,7 @@ class PIDController:
         self.prev_time = None
 
     def update(self, error_x, error_y, dt):
-        """Compute control output given position error and timestep."""
+        """Compute velocity output given position error and timestep."""
         # Proportional term
         p_out_x = self.kp * error_x
         p_out_y = self.kp * error_y
@@ -497,6 +497,9 @@ class Game:
         y += 25
         pause_label = self.small_font.render("Space — Pause", True, ACCENT_COLOR)
         self.screen.blit(pause_label, (self.pid_panel_x + 15, y))
+        y += 25
+        tab_label = self.small_font.render("TAB — Detach/attach target", True, ACCENT_COLOR)
+        self.screen.blit(tab_label, (self.pid_panel_x + 15, y))
 
     def draw_error_panel(self):
         # Background
@@ -579,14 +582,10 @@ class Game:
         lines = [
             "🎯  HOW TO PLAY",
             "",
-            "  • TARGET (red) follows your mouse by default",
-            "  • Press TAB to detach it — move it freely to tune sliders",
-            "  • Press TAB again to re-dock it to the cursor",
-            "  • Watch the CHASER (blue) pursue using PID control",
             "  • Drag the slider knobs to adjust parameters:",
             "      Kp (Proportional) — reacts to current error",
-            "      Ki (Integral)      — accumulates past error (remembers)",
-            "      Kd (Derivative)    — predicts future error (dampens)",
+            "      Ki (Integral)      — accumulates past error",
+            "      Kd (Derivative)    — predicts future error",
             "",
             "  💡 Try: high Kp = oscillation  |  add Ki = eliminate gap  |  add Kd = smooth it out",
         ]
